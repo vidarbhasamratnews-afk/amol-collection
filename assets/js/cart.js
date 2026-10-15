@@ -125,6 +125,7 @@ function openQuickView(id) {
 // ---------- cart drawer ----------
 function renderCartDrawer() {
   const box = document.getElementById("cartItems");
+  if (!box) return; // no drawer on this page (e.g. checkout) — nothing to render
   const lines = cartDetailed();
   box.innerHTML = "";
   if (!lines.length) {
