@@ -1,0 +1,8 @@
+-- Starter database schema. Review and adapt before using in Supabase.
+create table if not exists public.products (id uuid primary key default gen_random_uuid(), name text not null, description text default '', category text not null default 'Toys', price numeric(10,2) not null check (price >= 0), compare_at_price numeric(10,2), image_url text, stock integer not null default 0 check (stock >= 0), active boolean not null default true, created_at timestamptz not null default now(), updated_at timestamptz not null default now());
+create table if not exists public.orders (id uuid primary key default gen_random_uuid(), tracking_token text not null unique default encode(gen_random_bytes(24),'hex'), customer_name text not null, phone text not null, address text not null, total numeric(10,2) not null check (total >= 0), payment_method text not null check (payment_method in ('COD','ONLINE')), payment_status text not null default 'PENDING', order_status text not null default 'Order Received', tracking_number text, created_at timestamptz not null default now(), updated_at timestamptz not null default now());
+create table if not exists public.order_items (id uuid primary key default gen_random_uuid(), order_id uuid not null references public.orders(id) on delete cascade, product_id uuid references public.products(id) on delete set null, product_name text not null, quantity integer not null check (quantity > 0), unit_price numeric(10,2) not null check (unit_price >= 0));
+alter table public.products enable row level security;
+alter table public.orders enable row level security;
+alter table public.order_items enable row level security;
+-- Configure least-privilege policies and Supabase Auth before production. Never expose service-role keys in browser code.
