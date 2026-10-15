@@ -16,7 +16,7 @@ const CONFIG = {
   // and orders are kept in the browser's localStorage.
   // When you deploy Code.gs, paste the Web app /exec URL here, e.g.
   //   "https://script.google.com/macros/s/AKfycb.../exec"
-  APPS_SCRIPT_URL: "",
+  APPS_SCRIPT_URL: "https://script.google.com/macros/s/AKfycbwmOdtI37mB-wpCjZdgxP0HH0YhiXQeg98rC9Glwaywm0_L82FmDllsqQLLjrv5yjKd/exec",
 
   // ---- UPI payments (PhonePe / GPay / Paytm) ----
   // Customer pays DIRECTLY to this UPI ID from their own UPI app,
