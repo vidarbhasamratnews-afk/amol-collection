@@ -56,7 +56,17 @@ function renderOrder(order) {
     new Date(order.createdAt).toLocaleString("hi-IN", { dateStyle: "medium", timeStyle: "short" });
   document.getElementById("tTotal").textContent = formatINR(order.total);
   document.getElementById("tPay").textContent =
-    order.paymentMethod === "cod" ? "Cash on Delivery" : "Online";
+    order.paymentMethod === "cod" ? "Cash on Delivery" : "UPI (PhonePe / GPay)";
+  const ps = document.getElementById("tPayStatus");
+  if (order.paymentMethod === "upi" && order.paymentStatus === "unverified") {
+    ps.style.color = "#b45309";
+    ps.textContent = "⏳ पेमेंट जांच बाकी है — दुकानदार PhonePe में पेमेंट देखकर कन्फर्म करेगा";
+  } else if (order.paymentMethod === "upi" && order.paymentStatus === "verified") {
+    ps.style.color = "#15803d";
+    ps.textContent = "✅ पेमेंट सत्यापित हो गया है";
+  } else {
+    ps.textContent = "";
+  }
   const items = typeof order.items === "string" ? JSON.parse(order.items) : order.items;
   document.getElementById("tItems").innerHTML =
     "<b>आइटम:</b><br>" + items.map(i =>

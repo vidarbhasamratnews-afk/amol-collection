@@ -38,21 +38,24 @@ Google Sheet as the database. Follow these steps once.
 > ⚠️ If you later edit `Code.gs`, you must **Deploy → Manage
 > deployments → Edit → New version** so the live URL picks up changes.
 
-## (b) Razorpay (online payments — optional)
+## (b) UPI payments (PhonePe / GPay — no gateway needed)
 
-Online payment is **optional**. Without it the site offers Cash on
-Delivery only, which needs zero setup.
+Online UPI payment works **without any payment-gateway account**.
+Money goes straight to the shop's bank account via UPI.
 
-1. Sign up at <https://razorpay.com> (free; test mode works without
-   full KYC).
-2. Dashboard → **Home → Test Mode** → copy the **Key ID**
-   (looks like `rzp_test_xxxxxxxxxxxxxx`).
-3. Paste it in `assets/js/config.js`:
+1. Open `assets/js/config.js` and set your real UPI ID:
    ```js
-   RAZORPAY_KEY_ID: "rzp_test_xxxxxxxxxxxxxx",
+   SHOP_UPI_ID: "7020319567@upi",   // ← your PhonePe/GPay UPI ID
    ```
-4. The **Key Secret stays in Razorpay's dashboard** — it is never
-   needed by, or committed to, this website.
+   (PhonePe app → profile → "My UPI ID" me dikhega.)
+2. That's it. At checkout the customer sees a QR code + your UPI ID,
+   pays from their own UPI app, and enters the 12-digit UTR.
+
+**How verification works:** a UTR cannot be auto-verified without a
+PhonePe *merchant* (business) account with API access — so the site
+validates the UTR format (exactly 12 digits) and marks the order
+"⏳ जांच बाकी". You check the payment in your PhonePe app, then tap
+**✅ Verify** on that order in the admin panel — one click.
 
 ## (c) Admin panel password
 
@@ -83,6 +86,6 @@ ADMIN_PASSWORD_SHA256: "<paste the hex here>",
 - [ ] Sheet created, `Code.gs` pasted, `setup()` run
 - [ ] Script Property `ADMIN_KEY` set
 - [ ] Web app deployed as **Me / Anyone**, URL in `config.js`
-- [ ] Razorpay Key ID in `config.js` (or leave empty for COD only)
+- [ ] Shop UPI ID set in `config.js` (`SHOP_UPI_ID`)
 - [ ] Admin password hash changed
 - [ ] Pushed to GitHub, Pages enabled

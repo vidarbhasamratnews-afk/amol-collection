@@ -151,5 +151,6 @@ const DEMO_SEED_ORDER = {
   total: 499,
   paymentMethod: "cod",
   paymentId: "",
+  paymentStatus: "",
   status: "Shipped",
 };

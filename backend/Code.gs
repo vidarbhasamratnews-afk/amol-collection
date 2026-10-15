@@ -7,7 +7,17 @@
  * Sheets used:
  *   Products: id | name | price | mrp | category | stock | imageUrl | description | updatedAt
  *   Orders:   orderId | createdAt | name | phone | address | pincode |
- *             itemsJson | total | paymentMethod | paymentId | status
+ *             itemsJson | total | paymentMethod | paymentId | paymentStatus | status
+ *
+ * paymentMethod is "cod" or "upi". For UPI orders paymentId holds the
+ * 12-digit UTR entered by the customer and paymentStatus is
+ * "unverified" until the admin checks the PhonePe app and calls
+ * verifyPayment, which sets it to "verified".
+ *
+ * NOTE: a UTR cannot be auto-verified without a PhonePe merchant
+ * (business) account with API access. The backend validates the UTR
+ * format (exactly 12 digits); verification itself is one click in
+ * the admin panel after checking the PhonePe app.
  *
  * Admin writes (upsertProduct, deleteProduct, updateOrderStatus,
  * getOrders) require `adminKey` in the JSON body (POST) or in the
@@ -27,7 +37,7 @@ function setup() {
   if (!orders) {
     orders = ss.insertSheet("Orders");
     orders.appendRow(["orderId", "createdAt", "name", "phone", "address", "pincode",
-                     "itemsJson", "total", "paymentMethod", "paymentId", "status"]);
+                     "itemsJson", "total", "paymentMethod", "paymentId", "paymentStatus", "status"]);
   }
   Logger.log("Sheets ready. Now set Script Property ADMIN_KEY, then Deploy > New deployment > Web app.");
 }
@@ -69,7 +79,7 @@ function rowToOrder(row) {
     orderId: String(row[0]), createdAt: row[1], name: row[2], phone: String(row[3]),
     address: row[4], pincode: String(row[5]), items: String(row[6]),
     total: Number(row[7]), paymentMethod: row[8], paymentId: String(row[9] || ""),
-    status: row[10],
+    paymentStatus: String(row[10] || ""), status: row[11],
   };
 }
 
@@ -134,8 +144,9 @@ function doPost(e) {
       const pincode = String(body.pincode || "").trim();
       const items = body.items;
       const total = Number(body.total);
-      const paymentMethod = body.paymentMethod === "online" ? "online" : "cod";
+      const paymentMethod = body.paymentMethod === "upi" ? "upi" : "cod";
       const paymentId = String(body.paymentId || "");
+      const paymentStatus = paymentMethod === "upi" ? "unverified" : "";
 
       if (name.length < 2) return fail("Invalid name");
       if (!validPhone(phone)) return fail("Invalid phone");
@@ -143,11 +154,13 @@ function doPost(e) {
       if (!/^\d{6}$/.test(pincode)) return fail("Invalid pincode");
       if (!Array.isArray(items) || !items.length) return fail("Empty cart");
       if (!(total > 0)) return fail("Invalid total");
+      // UPI orders must carry a 12-digit UTR / transaction ID
+      if (paymentMethod === "upi" && !/^\d{12}$/.test(paymentId)) return fail("Invalid UTR");
 
       const orderId = makeOrderId();
       ss.getSheetByName("Orders").appendRow([
         orderId, new Date(), name, phone, address, pincode,
-        JSON.stringify(items), total, paymentMethod, paymentId, "Pending",
+        JSON.stringify(items), total, paymentMethod, paymentId, paymentStatus, "Pending",
       ]);
       return ok({ orderId: orderId });
     }
@@ -192,7 +205,22 @@ function doPost(e) {
       const rows = sheet.getDataRange().getValues();
       for (let i = 1; i < rows.length; i++) {
         if (String(rows[i][0]) === orderId) {
-          sheet.getRange(i + 1, 11).setValue(status); // column K = status
+          sheet.getRange(i + 1, 12).setValue(status); // column L = status
+          break;
+        }
+      }
+      return ok({});
+    }
+
+    // verifyPayment: admin has checked the PhonePe app and confirms
+    // the UPI payment. Sets paymentStatus (column K) to "verified".
+    if (action === "verifyPayment") {
+      const orderId = String(body.orderId || "");
+      const sheet = ss.getSheetByName("Orders");
+      const rows = sheet.getDataRange().getValues();
+      for (let i = 1; i < rows.length; i++) {
+        if (String(rows[i][0]) === orderId) {
+          sheet.getRange(i + 1, 11).setValue("verified"); // column K = paymentStatus
           break;
         }
       }

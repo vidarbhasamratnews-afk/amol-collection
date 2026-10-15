@@ -5,8 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>चेकआउट — Amol Collection</title>
   <link rel="stylesheet" href="assets/css/style.css">
-  <!-- Razorpay popup library (loaded only when online payment is configured) -->
-  <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 </head>
 <body>
 
@@ -51,6 +49,26 @@
   <div class="form-card">
     <h2>💳 पेमेंट का तरीका</h2>
     <div id="payMethods"></div>
+
+    <!-- UPI payment box: shown when "UPI" is selected -->
+    <div id="upiBox" class="hidden" style="margin-top:14px;border:2px dashed #e11d48;border-radius:12px;padding:14px">
+      <h3 style="margin:0 0 8px">📱 UPI से पेमेंट करें</h3>
+      <p style="margin:6px 0">नीचे QR को <b>PhonePe / GPay / Paytm</b> से स्कैन करें <b>या</b> UPI ID पर पेमेंट भेजें:</p>
+      <div style="text-align:center;margin:10px 0">
+        <img id="upiQr" alt="UPI QR code" style="width:200px;height:200px;border:1px solid #e5e7eb;border-radius:10px;background:#fff">
+      </div>
+      <div style="margin:8px 0;text-align:center">
+        <b>UPI ID:</b> <code id="upiIdText" style="font-size:1.05rem"></code><br>
+        <button class="btn btn-outline btn-sm" id="copyUpiBtn" type="button" style="margin-top:6px">📋 UPI ID कॉपी करें</button>
+      </div>
+      <p style="text-align:center"><b>राशि:</b> <span id="upiAmount" style="font-size:1.2rem;color:#e11d48"></span></p>
+      <div class="field" style="margin-top:10px">
+        <label for="upiTxn">पेमेंट के बाद मिला 12 अंकों का UTR / Transaction ID *</label>
+        <input id="upiTxn" type="tel" inputmode="numeric" maxlength="12" placeholder="जैसे — 412345678901">
+        <div class="error" id="errUpiTxn">सही 12 अंकों का UTR लिखें (PhonePe में पेमेंट खोलकर "Transaction ID / UTR" देखें)</div>
+      </div>
+      <p style="font-size:.82rem;color:#6b7280">ℹ️ UTR डालने के बाद ही ऑर्डर पक्का होगा। दुकानदार PhonePe ऐप में पेमेंट जांचकर आपका ऑर्डर कन्फर्म करेगा।</p>
+    </div>
   </div>
 
   <div class="form-card" style="text-align:center">

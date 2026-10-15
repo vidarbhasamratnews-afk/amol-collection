@@ -18,12 +18,19 @@ const CONFIG = {
   //   "https://script.google.com/macros/s/AKfycb.../exec"
   APPS_SCRIPT_URL: "",
 
-  // ---- Online payments (Razorpay) ----
-  // Empty string = online payment hidden; only "Cash on Delivery"
-  // is offered. To enable, paste your Razorpay Key ID (test or live),
-  // e.g. "rzp_test_xxxxxxxxxxxxxx". The Key SECRET always stays in
-  // Razorpay's dashboard — never commit it anywhere.
-  RAZORPAY_KEY_ID: "",
+  // ---- UPI payments (PhonePe / GPay / Paytm) ----
+  // Customer pays DIRECTLY to this UPI ID from their own UPI app,
+  // then enters the 12-digit UTR / transaction ID at checkout.
+  // Put YOUR real UPI ID here — e.g. "7020319567@upi".
+  //
+  // NOTE (honest limitation): a UTR cannot be *automatically*
+  // verified without a PhonePe merchant (business) account with API
+  // access. The site validates the UTR format (exactly 12 digits)
+  // and marks the order "payment unverified". The admin checks the
+  // payment in the PhonePe app and taps "Verify" in the admin
+  // panel — one click per order.
+  SHOP_UPI_ID: "7020319567@upi",
+  SHOP_UPI_NAME: "Amol Collection",
 
   // ---- Admin panel password ----
   // SHA-256 hex of the admin password. Default below is the hash of

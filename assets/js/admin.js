@@ -201,6 +201,18 @@ function renderOrders() {
     const items = typeof o.items === "string" ? JSON.parse(o.items) : o.items;
     const count = Array.isArray(items) ? items.reduce((s, i) => s + Number(i.qty || 0), 0) : 0;
     const tr = document.createElement("tr");
+    let payCell;
+    if (o.paymentMethod === "cod") {
+      payCell = "COD";
+    } else {
+      // UPI: show UTR + verification state + one-click verify button
+      const verified = o.paymentStatus === "verified";
+      payCell = "UPI<br><small>UTR: " + escapeHtml(o.paymentId || "—") + "</small><br>" +
+        (verified
+          ? '<span style="color:#15803d;font-weight:700">✅ सत्यापित</span>'
+          : '<span style="color:#b45309;font-weight:700">⏳ जांच बाकी</span> ' +
+            '<button class="btn btn-outline btn-sm" data-verify="' + escapeHtml(o.orderId) + '">✅ Verify</button>');
+    }
     tr.innerHTML =
       "<td><b>" + escapeHtml(o.orderId) + "</b></td>" +
       "<td>" + new Date(o.createdAt).toLocaleString("hi-IN", { dateStyle: "short", timeStyle: "short" }) + "</td>" +
@@ -208,7 +220,7 @@ function renderOrders() {
       "<td>" + escapeHtml(o.phone) + "</td>" +
       "<td>" + count + "</td>" +
       "<td>" + formatINR(o.total) + "</td>" +
-      "<td>" + (o.paymentMethod === "cod" ? "COD" : "Online") + "</td>" +
+      "<td>" + payCell + "</td>" +
       '<td><select data-status="' + escapeHtml(o.orderId) + '">' +
         ["Pending", "Confirmed", "Shipped", "Delivered", "Cancelled"].map(s =>
           '<option value="' + s + '"' + (s === o.status ? " selected" : "") + ">" + s + "</option>"
@@ -217,6 +229,25 @@ function renderOrders() {
   });
   tb.querySelectorAll("[data-status]").forEach(sel =>
     sel.onchange = () => updateOrderStatus(sel.dataset.status, sel.value));
+  tb.querySelectorAll("[data-verify]").forEach(btn =>
+    btn.onclick = () => verifyPayment(btn.dataset.verify));
+}
+
+// Admin verifies the UPI payment in the PhonePe app first,
+// then marks it verified here with one click.
+async function verifyPayment(orderId) {
+  if (!confirm("क्या PhonePe ऐप में पेमेंट देखकर सत्यापित कर दिया है?\nऑर्डर: " + orderId)) return;
+  if (isDemo()) {
+    const list = getDemoOrdersRaw();
+    const o = list.find(x => x.orderId === orderId);
+    if (o) { o.paymentStatus = "verified"; saveDemoOrders(list); }
+    else if (orderId === DEMO_SEED_ORDER.orderId) { DEMO_SEED_ORDER.paymentStatus = "verified"; }
+  } else {
+    const res = await apiPost("verifyPayment", { adminKey: getAdminKey(), orderId });
+    if (!res.ok) { toast("❌ सत्यापित नहीं हुआ"); return; }
+  }
+  toast("✅ पेमेंट सत्यापित");
+  loadOrders();
 }
 
 async function updateOrderStatus(orderId, status) {
@@ -240,11 +271,11 @@ function getDemoOrdersRaw() {
 
 // ---------- CSV export ----------
 function exportCSV() {
-  const rows = [["Order ID", "Date", "Name", "Phone", "Address", "Pincode", "Items", "Total", "Payment", "Payment ID", "Status"]];
+  const rows = [["Order ID", "Date", "Name", "Phone", "Address", "Pincode", "Items", "Total", "Payment", "UTR / Payment ID", "Payment Status", "Status"]];
   ORDER_LIST.forEach(o => {
     const items = typeof o.items === "string" ? o.items : JSON.stringify(o.items);
     rows.push([o.orderId, o.createdAt, o.name, o.phone, o.address, o.pincode,
-               items, o.total, o.paymentMethod, o.paymentId || "", o.status]);
+               items, o.total, o.paymentMethod, o.paymentId || "", o.paymentStatus || "", o.status]);
   });
   const csv = rows.map(r => r.map(c => '"' + String(c == null ? "" : c).replace(/"/g, '""') + '"').join(",")).join("\n");
   const blob = new Blob(["\ufeff" + csv], { type: "text/csv;charset=utf-8" });
