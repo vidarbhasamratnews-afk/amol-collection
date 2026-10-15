@@ -181,6 +181,22 @@ function showConfirmation(orderId, phone, payNote) {
   document.getElementById("confirmPayNote").textContent = payNote;
   document.getElementById("trackLink").href =
     "track.html?orderId=" + encodeURIComponent(orderId) + "&phone=" + encodeURIComponent(phone);
+  // Copy Order ID button
+  document.getElementById("copyOrderIdBtn").onclick = () => {
+    const id = document.getElementById("confirmOrderId").textContent.trim();
+    const done = () => toast("📋 Order ID कॉपी हो गया: " + id);
+    const fail = () => toast("⚠️ कॉपी नहीं हुआ — Order ID हाथ से लिख लें");
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(id).then(done, fail);
+    } else {
+      const ta = document.createElement("textarea");
+      ta.value = id;
+      document.body.appendChild(ta);
+      ta.select();
+      try { document.execCommand("copy"); done(); } catch { fail(); }
+      document.body.removeChild(ta);
+    }
+  };
   window.scrollTo(0, 0);
 }
 
