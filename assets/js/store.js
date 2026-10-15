@@ -33,9 +33,13 @@ async function getProducts() {
 
 // Generic POST helper for Apps Script actions.
 async function apiPost(action, payload) {
+  // NOTE: Apps Script web apps reject CORS preflights, so we must NOT
+  // send Content-Type: application/json (that triggers a preflight).
+  // text/plain is a "simple request" — no preflight — and doPost still
+  // receives the JSON string in e.postData.contents.
   const res = await fetch(CONFIG.APPS_SCRIPT_URL, {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
+    headers: { "Content-Type": "text/plain;charset=utf-8" },
     body: JSON.stringify(Object.assign({ action }, payload)),
   });
   return res.json();
