@@ -179,8 +179,9 @@ function showConfirmation(orderId, phone, payNote) {
   document.getElementById("confirmMain").classList.remove("hidden");
   document.getElementById("confirmOrderId").textContent = orderId;
   document.getElementById("confirmPayNote").textContent = payNote;
-  document.getElementById("trackLink").href =
-    "track.html?orderId=" + encodeURIComponent(orderId) + "&phone=" + encodeURIComponent(phone);
+  const trackUrl = "track.html?orderId=" + encodeURIComponent(orderId) +
+    "&phone=" + encodeURIComponent(phone);
+  document.getElementById("trackLink").href = trackUrl;
   // Copy Order ID button
   document.getElementById("copyOrderIdBtn").onclick = () => {
     const id = document.getElementById("confirmOrderId").textContent.trim();
@@ -197,6 +198,19 @@ function showConfirmation(orderId, phone, payNote) {
       document.body.removeChild(ta);
     }
   };
+  // Auto-open the tracking page after a short pause, so the customer
+  // sees (and can copy) the Order ID first. "Home" cancels the redirect.
+  const note = document.createElement("p");
+  note.style.cssText = "color:#1d4ed8;font-weight:700;margin-top:12px";
+  document.querySelector("#confirmMain .form-card").appendChild(note);
+  let secs = 4;
+  note.textContent = "⏳ " + secs + " सेकंड में ट्रैकिंग पेज खुल रहा है…";
+  const timer = setInterval(() => {
+    secs--;
+    if (secs <= 0) { clearInterval(timer); location.href = trackUrl; }
+    else note.textContent = "⏳ " + secs + " सेकंड में ट्रैकिंग पेज खुल रहा है…";
+  }, 1000);
+  document.getElementById("confirmHomeBtn").onclick = () => clearInterval(timer);
   window.scrollTo(0, 0);
 }
 
