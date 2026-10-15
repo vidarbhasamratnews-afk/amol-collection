@@ -29,7 +29,7 @@ const CONFIG = {
   // and marks the order "payment unverified". The admin checks the
   // payment in the PhonePe app and taps "Verify" in the admin
   // panel — one click per order.
-  SHOP_UPI_ID: "7020319567@upi",
+  SHOP_UPI_ID: "gpay-12190083031@okbizaxis",
   SHOP_UPI_NAME: "Amol Collection",
 
   // ---- Admin panel password ----

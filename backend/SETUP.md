@@ -45,7 +45,7 @@ Money goes straight to the shop's bank account via UPI.
 
 1. Open `assets/js/config.js` and set your real UPI ID:
    ```js
-   SHOP_UPI_ID: "7020319567@upi",   // ← your PhonePe/GPay UPI ID
+   SHOP_UPI_ID: "gpay-12190083031@okbizaxis",   // ← your PhonePe/GPay UPI ID
    ```
    (PhonePe app → profile → "My UPI ID" me dikhega.)
 2. That's it. At checkout the customer sees a QR code + your UPI ID,

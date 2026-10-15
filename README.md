@@ -69,7 +69,7 @@ All settings live in `assets/js/config.js`:
 | Setting | Meaning |
 |---|---|
 | `APPS_SCRIPT_URL` | Apps Script web-app `/exec` URL. Empty = demo mode |
-| `SHOP_UPI_ID` | Your shop's UPI ID for direct PhonePe/GPay payments (default `7020319567@upi` — change to your real one) |
+| `SHOP_UPI_ID` | Your shop's UPI ID for direct PhonePe/GPay payments (`gpay-12190083031@okbizaxis`) |
 | `ADMIN_PASSWORD_SHA256` | SHA-256 hex of the admin password (default `amol123`) |
 | `SHOP_PHONE` | `7020319567` — used for the WhatsApp button |
 
