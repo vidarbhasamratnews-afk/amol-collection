@@ -48,10 +48,40 @@ function renderTimeline(order) {
   });
 }
 
+function copyText(text, msg) {
+  const done = () => toast(msg || "📋 कॉपी हो गया");
+  const fail = () => toast("⚠️ कॉपी नहीं हुआ");
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(text).then(done, fail);
+  } else {
+    const ta = document.createElement("textarea");
+    ta.value = text;
+    document.body.appendChild(ta);
+    ta.select();
+    try { document.execCommand("copy"); done(); } catch { fail(); }
+    document.body.removeChild(ta);
+  }
+}
+
 function renderOrder(order) {
   document.getElementById("trackResult").classList.remove("hidden");
   document.getElementById("trackError").classList.add("hidden");
   document.getElementById("tOrderId").textContent = order.orderId;
+  document.getElementById("copyTrackIdBtn").onclick = () =>
+    copyText(order.orderId, "📋 Order ID कॉपी हो गया");
+  // Success banner when arriving fresh from checkout (?new=1)
+  const banner = document.getElementById("trackSuccess");
+  if (new URLSearchParams(location.search).get("new") === "1") {
+    let html = "🎉 <b>ऑर्डर सफल हो गया!</b> आप यहाँ अपना ऑर्डर ट्रैक कर सकते हैं।";
+    if (order.paymentMethod === "upi" && order.paymentStatus === "unverified")
+      html += "<br><small>✅ आपका UTR मिल गया है — दुकानदार PhonePe में पेमेंट जांचकर कन्फर्म करेगा।</small>";
+    else if (order.paymentMethod === "cod")
+      html += "<br><small>💵 सामान मिलने पर नकद भुगतान करें।</small>";
+    banner.innerHTML = html;
+    banner.classList.remove("hidden");
+  } else {
+    banner.classList.add("hidden");
+  }
   document.getElementById("tDate").textContent =
     new Date(order.createdAt).toLocaleString("hi-IN", { dateStyle: "medium", timeStyle: "short" });
   document.getElementById("tTotal").textContent = formatINR(order.total);

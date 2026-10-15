@@ -148,7 +148,7 @@ async function placeOrder() {
   btn.textContent = "⏳ कृपया प्रतीक्षा करें…";
 
   try {
-    let orderId, payNote;
+    let orderId;
     if (isDemo()) {
       // Demo mode: id generated locally, order stored in browser
       orderId = makeOrderId();
@@ -161,57 +161,17 @@ async function placeOrder() {
       if (!res.ok) throw new Error(res.error || "order failed");
       orderId = res.orderId;
     }
-    payNote = PAY_METHOD === "cod"
-      ? "सामान डिलीवर होने पर नकद भुगतान करें।"
-      : "✅ आपका UTR नोट कर लिया गया है (UTR: " + utr + ")। PhonePe में पेमेंट जांचकर दुकानदार आपका ऑर्डर कन्फर्म करेगा।";
     clearCart();
-    showConfirmation(orderId, customer.phone, payNote);
+    // Take the customer straight to the tracking page (?new=1 shows the
+    // "order successful" banner there) — no lingering success screen.
+    location.href = "track.html?orderId=" + encodeURIComponent(orderId) +
+      "&phone=" + encodeURIComponent(customer.phone) + "&new=1";
   } catch (e) {
     console.error(e);
     toast("❌ ऑर्डर नहीं हो पाया: " + e.message);
     btn.disabled = false;
     btn.textContent = "✅ ऑर्डर पक्का करें";
   }
-}
-
-function showConfirmation(orderId, phone, payNote) {
-  document.getElementById("checkoutMain").classList.add("hidden");
-  document.getElementById("confirmMain").classList.remove("hidden");
-  document.getElementById("confirmOrderId").textContent = orderId;
-  document.getElementById("confirmPayNote").textContent = payNote;
-  const trackUrl = "track.html?orderId=" + encodeURIComponent(orderId) +
-    "&phone=" + encodeURIComponent(phone);
-  document.getElementById("trackLink").href = trackUrl;
-  // Copy Order ID button
-  document.getElementById("copyOrderIdBtn").onclick = () => {
-    const id = document.getElementById("confirmOrderId").textContent.trim();
-    const done = () => toast("📋 Order ID कॉपी हो गया: " + id);
-    const fail = () => toast("⚠️ कॉपी नहीं हुआ — Order ID हाथ से लिख लें");
-    if (navigator.clipboard && navigator.clipboard.writeText) {
-      navigator.clipboard.writeText(id).then(done, fail);
-    } else {
-      const ta = document.createElement("textarea");
-      ta.value = id;
-      document.body.appendChild(ta);
-      ta.select();
-      try { document.execCommand("copy"); done(); } catch { fail(); }
-      document.body.removeChild(ta);
-    }
-  };
-  // Auto-open the tracking page after a short pause, so the customer
-  // sees (and can copy) the Order ID first. "Home" cancels the redirect.
-  const note = document.createElement("p");
-  note.style.cssText = "color:#1d4ed8;font-weight:700;margin-top:12px";
-  document.querySelector("#confirmMain .form-card").appendChild(note);
-  let secs = 4;
-  note.textContent = "⏳ " + secs + " सेकंड में ट्रैकिंग पेज खुल रहा है…";
-  const timer = setInterval(() => {
-    secs--;
-    if (secs <= 0) { clearInterval(timer); location.href = trackUrl; }
-    else note.textContent = "⏳ " + secs + " सेकंड में ट्रैकिंग पेज खुल रहा है…";
-  }, 1000);
-  document.getElementById("confirmHomeBtn").onclick = () => clearInterval(timer);
-  window.scrollTo(0, 0);
 }
 
 // ---------- init ----------
