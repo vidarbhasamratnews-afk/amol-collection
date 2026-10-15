@@ -22,6 +22,8 @@
  * Admin writes (upsertProduct, deleteProduct, updateOrderStatus,
  * getOrders) require `adminKey` in the JSON body (POST) or in the
  * query string (GET) matching the Script Property ADMIN_KEY.
+ * getOrdersByPhone needs no key — the phone number itself is the
+ * credential (customer "my orders" lookup).
  * Run setup() once from the Apps Script editor to create sheets.
  */
 
@@ -121,6 +123,22 @@ function doGet(e) {
       const sheet = ss.getSheetByName("Orders");
       const rows = sheet ? sheet.getDataRange().getValues().slice(1) : [];
       return ok({ orders: rows.map(rowToOrder).reverse() }); // newest first
+    }
+
+    // getOrdersByPhone: customer "my orders" lookup. The phone number
+    // itself is the credential, so no adminKey is required. Returns
+    // light summaries (full details need orderId + phone via getOrder).
+    if (action === "getOrdersByPhone") {
+      const phone = String(e.parameter.phone || "");
+      if (!validPhone(phone)) return fail("Invalid phone");
+      const sheet = ss.getSheetByName("Orders");
+      const rows = sheet ? sheet.getDataRange().getValues().slice(1) : [];
+      const mine = rows.map(rowToOrder).filter(o => o.phone === phone).reverse();
+      return ok({ orders: mine.map(o => ({
+        orderId: o.orderId, createdAt: o.createdAt, total: o.total,
+        paymentMethod: o.paymentMethod, paymentStatus: o.paymentStatus,
+        status: o.status,
+      }))});
     }
 
     return fail("Unknown action: " + action);

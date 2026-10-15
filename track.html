@@ -18,6 +18,18 @@
 
 <main class="container">
   <div class="form-card">
+    <h2>📱 मेरे ऑर्डर</h2>
+    <p style="color:#6b7280;font-size:14px;margin-top:0">Order ID याद नहीं? कोई बात नहीं — अपना <b>मोबाइल नंबर</b> डालें, आपके सारे ऑर्डर दिख जाएंगे।</p>
+    <div class="field">
+      <label for="myPhone">मोबाइल नंबर *</label>
+      <input id="myPhone" type="tel" inputmode="numeric" maxlength="10" placeholder="10 अंकों का नंबर">
+    </div>
+    <button class="btn btn-primary" id="myOrdersBtn" style="width:100%">📋 मेरे ऑर्डर देखें</button>
+    <p id="myOrdersError" class="hidden" style="color:#e11d48;font-weight:700;margin-top:10px"></p>
+    <div id="myOrdersList" style="margin-top:10px"></div>
+  </div>
+
+  <div class="form-card">
     <h2>📦 अपना ऑर्डर ट्रैक करें</h2>
     <div class="field">
       <label for="trackOrderId">ऑर्डर ID *</label>
@@ -56,9 +68,9 @@
   </div>
 </footer>
 
-<script src="assets/js/config.js?v=20261015c"></script>
-<script src="assets/js/demo-products.js?v=20261015c"></script>
-<script src="assets/js/store.js?v=20261015c"></script>
-<script src="assets/js/track.js?v=20261015c"></script>
+<script src="assets/js/config.js?v=20261015d"></script>
+<script src="assets/js/demo-products.js?v=20261015d"></script>
+<script src="assets/js/store.js?v=20261015d"></script>
+<script src="assets/js/track.js?v=20261015d"></script>
 </body>
 </html>

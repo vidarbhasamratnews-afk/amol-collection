@@ -80,6 +80,55 @@ function renderOrder(order) {
   document.getElementById("trackResult").scrollIntoView({ behavior: "smooth" });
 }
 
+// ---------- "My orders" lookup by phone (no Order ID needed) ----------
+async function showMyOrders() {
+  const phone = document.getElementById("myPhone").value.trim();
+  const err = document.getElementById("myOrdersError");
+  const list = document.getElementById("myOrdersList");
+  if (!validPhone(phone)) {
+    err.textContent = "⚠️ सही 10 अंकों का मोबाइल नंबर लिखें";
+    err.classList.remove("hidden");
+    return;
+  }
+  err.classList.add("hidden");
+  list.innerHTML = "<p>🔍 खोज रहे हैं…</p>";
+  try {
+    let orders;
+    if (isDemo()) {
+      orders = getDemoOrders()
+        .filter(o => String(o.phone) === phone)
+        .map(o => ({ orderId: o.orderId, createdAt: o.createdAt, total: o.total,
+                     paymentMethod: o.paymentMethod, paymentStatus: o.paymentStatus,
+                     status: o.status }));
+    } else {
+      const res = await apiGet("getOrdersByPhone", { phone });
+      if (!res.ok) throw new Error(res.error || "lookup failed");
+      orders = res.orders;
+    }
+    if (!orders.length) {
+      list.innerHTML = "<p>😕 इस नंबर पर कोई ऑर्डर नहीं मिला।</p>";
+      return;
+    }
+    list.innerHTML = orders.map(o => {
+      const payTag = o.paymentMethod === "upi"
+        ? (o.paymentStatus === "verified" ? " • ✅ पेमेंट सत्यापित" : " • ⏳ पेमेंट जांच बाकी")
+        : " • 💵 COD";
+      return '<a href="track.html?orderId=' + encodeURIComponent(o.orderId) +
+        "&phone=" + encodeURIComponent(phone) +
+        '" style="display:block;padding:10px 12px;border:1px solid #e5e7eb;border-radius:10px;margin-bottom:8px;text-decoration:none;color:inherit;background:#fff">' +
+        "<b>" + escapeHtml(o.orderId) + "</b> — <b>" + formatINR(o.total) + "</b><br>" +
+        '<small style="color:#6b7280">' +
+        new Date(o.createdAt).toLocaleString("hi-IN", { dateStyle: "medium", timeStyle: "short" }) +
+        " • " + (STATUS_HI[o.status] || o.status) + payTag + "</small></a>";
+    }).join("");
+  } catch (e) {
+    console.error(e);
+    err.textContent = "⚠️ कुछ गड़बड़ हुई, बाद में पुनः प्रयास करें।";
+    err.classList.remove("hidden");
+    list.innerHTML = "";
+  }
+}
+
 async function doTrack() {
   const orderId = document.getElementById("trackOrderId").value.trim();
   const phone = document.getElementById("trackPhone").value.trim();
@@ -113,6 +162,7 @@ function escapeHtml(s) {
 
 document.addEventListener("DOMContentLoaded", () => {
   document.getElementById("trackBtn").onclick = doTrack;
+  document.getElementById("myOrdersBtn").onclick = showMyOrders;
   // Pre-fill when coming from the checkout confirmation screen
   const q = new URLSearchParams(location.search);
   if (q.get("orderId")) document.getElementById("trackOrderId").value = q.get("orderId");
