@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>एडमिन पैनल — Amol Collection</title>
+  <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+
+<header class="site-header">
+  <a class="brand" href="index.html">
+    <img src="assets/img/logo.png" alt="Amol Collection logo">
+    <span><span class="brand-name">Amol Collection</span><br>
+    <span class="brand-tag">एडमिन पैनल</span></span>
+  </a>
+  <button class="btn btn-outline btn-sm hidden" id="logoutBtn" style="margin-left:auto">🚪 लॉगआउट</button>
+</header>
+
+<!-- ===== Login screen ===== -->
+<main class="container" id="loginScreen">
+  <div class="form-card login-card">
+    <h2>🔐 एडमिन लॉगिन</h2>
+    <div class="field">
+      <label for="adminPass">पासवर्ड</label>
+      <input id="adminPass" type="password" placeholder="एडमिन पासवर्ड लिखें" autocomplete="current-password">
+      <div class="error" id="errPass">गलत पासवर्ड</div>
+    </div>
+    <button class="btn btn-primary" id="loginBtn" style="width:100%">लॉगिन करें</button>
+    <p style="color:#6b7280;font-size:.82rem;margin-top:10px">डिफ़ॉल्ट पासवर्ड: <b>amol123</b> — लाइव जाने से पहले ज़रूर बदलें (SETUP.md देखें)।</p>
+  </div>
+</main>
+
+<!-- ===== Dashboard ===== -->
+<main class="container admin-wrap hidden" id="dashboard">
+  <div class="tabs">
+    <button class="tab active" data-tab="products">📦 प्रोडक्ट्स</button>
+    <button class="tab" data-tab="orders">🧾 ऑर्डर्स</button>
+  </div>
+
+  <!-- Products tab -->
+  <section id="tab-products">
+    <div class="toolbar">
+      <button class="btn btn-primary btn-sm" id="addProductBtn">➕ नया प्रोडक्ट जोड़ें</button>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>फोटो</th><th>नाम</th><th>कीमत</th><th>स्टॉक</th><th>एक्शन</th></tr></thead>
+        <tbody id="productsTable"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- Orders tab -->
+  <section id="tab-orders" class="hidden">
+    <div class="toolbar">
+      <button class="btn btn-green btn-sm" id="exportCsvBtn">⬇️ ऑर्डर्स CSV डाउनलोड</button>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>ऑर्डर ID</th><th>तारीख</th><th>ग्राहक</th><th>फोन</th><th>आइटम</th><th>कुल</th><th>पेमेंट</th><th>स्थिति</th></tr></thead>
+        <tbody id="ordersTable"></tbody>
+      </table>
+    </div>
+  </section>
+</main>
+
+<!-- ===== Product Add/Edit modal ===== -->
+<div class="modal" id="productModal">
+  <div class="modal-box">
+    <button class="modal-close" id="pmClose">✕</button>
+    <h2 id="pmTitle">नया प्रोडक्ट</h2>
+    <input type="hidden" id="pmId">
+    <div class="field"><label>नाम *</label><input id="pmName" placeholder="जैसे — टेडी बियर"></div>
+    <div style="display:flex;gap:10px">
+      <div class="field" style="flex:1"><label>कीमत (₹) *</label><input id="pmPrice" type="number" min="1"></div>
+      <div class="field" style="flex:1"><label>MRP (₹)</label><input id="pmMrp" type="number" min="0"></div>
+    </div>
+    <div style="display:flex;gap:10px">
+      <div class="field" style="flex:1"><label>कैटेगरी *</label>
+        <select id="pmCategory">
+          <option>Soft Toys</option><option>Cars</option><option>Dolls</option>
+          <option>Games</option><option>School</option>
+        </select>
+      </div>
+      <div class="field" style="flex:1"><label>स्टॉक *</label><input id="pmStock" type="number" min="0"></div>
+    </div>
+    <div class="field"><label>फोटो URL (खाली = डिफ़ॉल्ट ड्राइंग)</label>
+      <input id="pmImage" placeholder="https://…">
+      <img class="img-preview" id="pmPreview" alt="preview">
+    </div>
+    <div class="field"><label>विवरण</label><textarea id="pmDesc" rows="2"></textarea></div>
+    <button class="btn btn-primary" id="pmSave" style="width:100%">💾 सेव करें</button>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script src="assets/js/config.js"></script>
+<script src="assets/js/demo-products.js"></script>
+<script src="assets/js/store.js"></script>
+<script src="assets/js/admin.js"></script>
+</body>
+</html>

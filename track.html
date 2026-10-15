@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ऑर्डर ट्रैक करें — Amol Collection</title>
+  <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+
+<header class="site-header">
+  <a class="brand" href="index.html">
+    <img src="assets/img/logo.png" alt="Amol Collection logo">
+    <span><span class="brand-name">Amol Collection</span><br>
+    <span class="brand-tag">ऑर्डर ट्रैकिंग</span></span>
+  </a>
+</header>
+
+<main class="container">
+  <div class="form-card">
+    <h2>📦 अपना ऑर्डर ट्रैक करें</h2>
+    <div class="field">
+      <label for="trackOrderId">ऑर्डर ID *</label>
+      <input id="trackOrderId" type="text" placeholder="जैसे — AC-20261015-0001" style="text-transform:uppercase">
+    </div>
+    <div class="field">
+      <label for="trackPhone">मोबाइल नंबर *</label>
+      <input id="trackPhone" type="tel" inputmode="numeric" maxlength="10" placeholder="ऑर्डर वाला 10 अंकों का नंबर">
+    </div>
+    <button class="btn btn-primary" id="trackBtn" style="width:100%">🔍 ऑर्डर खोजें</button>
+    <p id="trackError" class="hidden" style="color:#e11d48;font-weight:700;margin-top:10px"></p>
+  </div>
+
+  <div class="form-card hidden" id="trackResult">
+    <h2>🧾 ऑर्डर विवरण</h2>
+    <p><b>ऑर्डर ID:</b> <span id="tOrderId"></span></p>
+    <p><b>तारीख:</b> <span id="tDate"></span></p>
+    <p><b>कुल राशि:</b> <span id="tTotal"></span></p>
+    <p><b>पेमेंट:</b> <span id="tPay"></span></p>
+    <div id="tItems" style="margin:10px 0"></div>
+    <h3>🚚 ऑर्डर स्थिति</h3>
+    <ul class="timeline" id="tTimeline"></ul>
+    <a class="btn btn-green btn-sm" id="tWhatsApp" href="#" target="_blank" rel="noopener">💬 दुकान से WhatsApp पर पूछें</a>
+  </div>
+</main>
+
+<div class="toast" id="toast"></div>
+
+<footer class="site-footer">
+  <div class="container">
+    <h3>Amol Collection</h3>
+    <p>📍 Near Hanuman Mandir, Civil Lines, Gondia, Maharashtra</p>
+    <p>📞 7020319567</p>
+    <p class="copy">© 2026 Amol Collection, Gondia</p>
+  </div>
+</footer>
+
+<script src="assets/js/config.js"></script>
+<script src="assets/js/demo-products.js"></script>
+<script src="assets/js/store.js"></script>
+<script src="assets/js/track.js"></script>
+</body>
+</html>

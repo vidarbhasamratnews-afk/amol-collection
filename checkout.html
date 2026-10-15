@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>चेकआउट — Amol Collection</title>
+  <link rel="stylesheet" href="assets/css/style.css">
+  <!-- Razorpay popup library (loaded only when online payment is configured) -->
+  <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+</head>
+<body>
+
+<header class="site-header">
+  <a class="brand" href="index.html">
+    <img src="assets/img/logo.png" alt="Amol Collection logo">
+    <span><span class="brand-name">Amol Collection</span><br>
+    <span class="brand-tag">सुरक्षित चेकआउट</span></span>
+  </a>
+</header>
+
+<main class="container" id="checkoutMain">
+  <div class="form-card">
+    <h2>🧾 ऑर्डर सारांश</h2>
+    <div id="orderSummary"></div>
+  </div>
+
+  <div class="form-card">
+    <h2>📋 आपकी जानकारी</h2>
+    <div class="field">
+      <label for="custName">पूरा नाम *</label>
+      <input id="custName" type="text" placeholder="जैसे — अमोल शर्मा" autocomplete="name">
+      <div class="error" id="errName">कृपया अपना नाम लिखें</div>
+    </div>
+    <div class="field">
+      <label for="custPhone">मोबाइल नंबर (10 अंक) *</label>
+      <input id="custPhone" type="tel" inputmode="numeric" maxlength="10" placeholder="जैसे — 9876543210" autocomplete="tel">
+      <div class="error" id="errPhone">सही 10 अंकों का मोबाइल नंबर लिखें</div>
+    </div>
+    <div class="field">
+      <label for="custAddress">पूरा पता *</label>
+      <textarea id="custAddress" rows="3" placeholder="मकान नं., गली, मोहल्ला, शहर"></textarea>
+      <div class="error" id="errAddress">कृपया पूरा पता लिखें</div>
+    </div>
+    <div class="field">
+      <label for="custPincode">पिन कोड *</label>
+      <input id="custPincode" type="tel" inputmode="numeric" maxlength="6" placeholder="जैसे — 441601">
+      <div class="error" id="errPincode">सही 6 अंकों का पिन कोड लिखें</div>
+    </div>
+  </div>
+
+  <div class="form-card">
+    <h2>💳 पेमेंट का तरीका</h2>
+    <div id="payMethods"></div>
+  </div>
+
+  <div class="form-card" style="text-align:center">
+    <button class="btn btn-primary" id="placeOrderBtn" style="width:100%">✅ ऑर्डर पक्का करें</button>
+    <p style="color:#6b7280;font-size:.85rem">ऑर्डर करते ही आपको ऑर्डर ID मिलेगी जिससे आप ऑर्डर ट्रैक कर सकेंगे।</p>
+  </div>
+</main>
+
+<!-- Confirmation screen (hidden until order succeeds) -->
+<main class="container hidden" id="confirmMain">
+  <div class="form-card success-box">
+    <div class="tick">🎉</div>
+    <h2>ऑर्डर सफल रहा!</h2>
+    <p>धन्यवाद! आपका ऑर्डर मिल गया है।</p>
+    <div class="order-id-big" id="confirmOrderId"></div>
+    <p id="confirmPayNote" style="color:#6b7280"></p>
+    <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:14px">
+      <a class="btn btn-primary" id="trackLink" href="#">📦 ऑर्डर ट्रैक करें</a>
+      <a class="btn btn-outline" href="index.html">🏠 होम पर जाएं</a>
+    </div>
+  </div>
+</main>
+
+<div class="toast" id="toast"></div>
+
+<footer class="site-footer">
+  <div class="container">
+    <h3>Amol Collection</h3>
+    <p>📍 Near Hanuman Mandir, Civil Lines, Gondia, Maharashtra</p>
+    <p>📞 7020319567</p>
+    <p class="copy">© 2026 Amol Collection, Gondia</p>
+  </div>
+</footer>
+
+<script src="assets/js/config.js"></script>
+<script src="assets/js/demo-products.js"></script>
+<script src="assets/js/store.js"></script>
+<script src="assets/js/cart.js"></script>
+<script src="assets/js/checkout.js"></script>
+</body>
+</html>

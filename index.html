@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Amol Collection — खिलौने और गिफ्ट, गोंदिया</title>
+  <meta name="description" content="Amol Collection — गोंदिया का अपना खिलौना और गिफ्ट स्टोर। टेडी बियर, रिमोट कार, डॉल, गेम्स और स्कूल सामान ऑनलाइन ऑर्डर करें।">
+  <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+
+<!-- ===== Sticky header ===== -->
+<header class="site-header">
+  <a class="brand" href="index.html">
+    <img src="assets/img/logo.png" alt="Amol Collection logo">
+    <span>
+      <span class="brand-name">Amol Collection</span><br>
+      <span class="brand-tag">खिलौने • गिफ्ट • स्कूल सामान</span>
+    </span>
+  </a>
+  <div class="search-wrap">
+    <input id="searchInput" type="search" placeholder="खिलौना खोजें…">
+  </div>
+  <button class="cart-btn" id="cartOpenBtn" aria-label="कार्ट खोलें">
+    🛒 कार्ट <span class="cart-count" id="cartCount">0</span>
+  </button>
+</header>
+
+<!-- ===== Hero ===== -->
+<section class="hero">
+  <h1>🎉 बच्चों की खुशियों का ठिकाना 🎉</h1>
+  <p>टेडी बियर, रिमोट कार, डॉल, गेम्स और भी बहुत कुछ — गोंदिया में घर बैठे ऑर्डर करें</p>
+  <a class="btn btn-primary" href="#products">🛍️ खरीदारी शुरू करें</a>
+</section>
+
+<!-- ===== Category chips ===== -->
+<div class="container">
+  <div class="chips" id="categoryChips"></div>
+</div>
+
+<!-- ===== Product grid ===== -->
+<main class="container">
+  <div class="grid" id="products"></div>
+</main>
+
+<!-- ===== Cart drawer ===== -->
+<div class="overlay" id="overlay"></div>
+<aside class="drawer" id="cartDrawer" aria-label="शॉपिंग कार्ट">
+  <div class="drawer-head">
+    <h2>🛒 आपका कार्ट</h2>
+    <button class="qty-btn" id="cartCloseBtn" aria-label="बंद करें">✕</button>
+  </div>
+  <div class="drawer-items" id="cartItems"></div>
+  <div class="drawer-foot">
+    <div class="total-row"><span>कुल:</span><span id="cartTotal">₹0</span></div>
+    <a class="btn btn-primary" href="checkout.html">✅ ऑर्डर करें</a>
+    <button class="btn btn-outline" id="continueBtn">🛍️ और खरीदारी करें</button>
+  </div>
+</aside>
+
+<!-- ===== Quick-view modal ===== -->
+<div class="modal" id="quickView">
+  <div class="modal-box">
+    <button class="modal-close" id="qvClose">✕</button>
+    <img class="big" id="qvImg" alt="">
+    <h2 id="qvName"></h2>
+    <div class="price-row"><span class="price" id="qvPrice"></span><span class="mrp" id="qvMrp"></span></div>
+    <p id="qvDesc"></p>
+    <p id="qvStock" style="color:#6b7280;font-size:.9rem"></p>
+    <div style="display:flex;gap:8px">
+      <button class="btn btn-primary btn-sm" id="qvAdd">कार्ट में डालें</button>
+      <button class="btn btn-green btn-sm" id="qvBuy">अभी खरीदें</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<!-- ===== Footer ===== -->
+<footer class="site-footer">
+  <div class="container">
+    <h3>Amol Collection</h3>
+    <p>📍 Near Hanuman Mandir, Civil Lines, Gondia, Maharashtra</p>
+    <p>📞 <a href="tel:7020319567" style="color:#fff">7020319567</a></p>
+    <div class="footer-links">
+      <a class="btn btn-green btn-sm" id="waOrderBtn" href="#" target="_blank" rel="noopener">💬 WhatsApp पर ऑर्डर करें</a>
+      <a class="btn btn-outline btn-sm" href="track.html">📦 ऑर्डर ट्रैक करें</a>
+    </div>
+    <p class="copy">© 2026 Amol Collection, Gondia • सभी अधिकार सुरक्षित</p>
+  </div>
+</footer>
+
+<script src="assets/js/config.js"></script>
+<script src="assets/js/demo-products.js"></script>
+<script src="assets/js/store.js"></script>
+<script src="assets/js/cart.js"></script>
+</body>
+</html>
