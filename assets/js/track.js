@@ -60,7 +60,9 @@ function renderOrder(order) {
   const ps = document.getElementById("tPayStatus");
   if (order.paymentMethod === "upi" && order.paymentStatus === "unverified") {
     ps.style.color = "#b45309";
-    ps.textContent = "⏳ पेमेंट जांच बाकी है — दुकानदार PhonePe में पेमेंट देखकर कन्फर्म करेगा";
+    ps.innerHTML = "⏳ पेमेंट जांच बाकी है — जल्दी कन्फर्म करवाने के लिए कॉल करें: " +
+      '<a href="tel:+91' + CONFIG.SHOP_PHONE + '" style="color:#1d4ed8;text-decoration:underline">' +
+      "📞 " + CONFIG.SHOP_PHONE + "</a>";
   } else if (order.paymentMethod === "upi" && order.paymentStatus === "verified") {
     ps.style.color = "#15803d";
     ps.textContent = "✅ पेमेंट सत्यापित हो गया है";
